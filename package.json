@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-livescript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Precompile LiveScript source files.",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/avanov/ember-cli-livescript",
   "dependencies": {
-    "broccoli-livescript": ">=0.2.0"
+    "broccoli-filter": ">=0.1.6",
+    "LiveScript": ">=1.2.0"
   }
 }
