@@ -1,0 +1,12 @@
+# Emacs
+\#*#
+*~
+
+# PyCharm/IDEA project-related metadata
+# -------------------------------------
+.idea/
+
+# NodeJS
+# ---------------------
+npm-debug.log
+node_modules/*
