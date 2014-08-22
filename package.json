@@ -1,0 +1,26 @@
+{
+  "name": "ember-cli-livescript",
+  "version": "0.0.1",
+  "description": "Precompile LiveScript source files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ember-addon",
+    "livescript"
+  ],
+  "author": "Maxim Avanov",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/avanov/ember-cli-livescript"
+  },
+  "bugs": {
+    "url": "https://github.com/avanov/ember-cli-livescript/issues"
+  },
+  "homepage": "https://github.com/avanov/ember-cli-livescript",
+  "dependencies": {
+    "broccoli-livescript": ">=0.2.0"
+  }
+}
