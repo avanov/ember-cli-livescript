@@ -1,9 +1,6 @@
 LiveScript support for ember-cli
 ================================
 
-This addon is derived from [ember-cli-coffeescript](https://github.com/kimroen/ember-cli-coffeescript)
-package.
-
 Install
 -------
 
