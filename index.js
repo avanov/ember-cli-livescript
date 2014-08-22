@@ -7,15 +7,13 @@ var LiveScriptFilter = function(inputTree, options) {
 
     Filter.call(this, inputTree, options);
 
-    options = options || {};
+    options = options || {bare: true};
     this.bare = options.bare;
 };
 LiveScriptFilter.prototype = Object.create(Filter.prototype);
 LiveScriptFilter.prototype.constructor = LiveScriptFilter;
-
 LiveScriptFilter.prototype.extensions = ['ls'];
 LiveScriptFilter.prototype.targetExtension = 'js';
-
 LiveScriptFilter.prototype.processString = function(string) {
     var liveScriptOptions = { bare: this.bare };
     try {
@@ -34,6 +32,7 @@ var LiveScriptPreprocessor = function(options) {
     this.ext = 'js';
     this.options = options || {bare: true};
 };
+
 
 LiveScriptPreprocessor.prototype.toTree = function(tree, inputPath, outputPath) {
     var options = {
