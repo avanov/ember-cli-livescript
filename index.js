@@ -1,4 +1,6 @@
-var Filter = require('broccoli-filter');
+var Filter     = require('broccoli-filter');
+var checker    = require('ember-cli-version-checker');
+var defaults   = require('lodash').defaults;
 var liveScript = require('LiveScript');
 
 var LiveScriptFilter = function(inputTree, options) {
@@ -17,8 +19,7 @@ LiveScriptFilter.prototype.targetExtension = 'js';
 LiveScriptFilter.prototype.processString = function(string) {
     var liveScriptOptions = { bare: this.bare };
     try {
-        var compiledJS = liveScript.compile(string, liveScriptOptions);
-        return compiledJS;
+        return liveScript.compile(string, liveScriptOptions);
     } catch (err) {
         err.line = err.location && err.location.first_line;
         err.column = err.location && err.location.first_column;
@@ -40,24 +41,34 @@ LiveScriptPreprocessor.prototype.toTree = function(tree, inputPath, outputPath) 
         srcDir: inputPath,
         destDir: outputPath
     };
-    var liveScriptTree = LiveScriptFilter(tree, options);
-    return liveScriptTree;
+    return LiveScriptFilter(tree, options);
 };
 
+module.exports = {
+    name: "Ember CLI LiveScript Addon",
 
-var LiveScriptAddon = function(project) {
-    this.project = project;
-    this.name = 'Ember CLI LiveScript Addon';
+    shouldSetupRegistryInIncluded: function() {
+        return !checker.isAbove(this, '0.2.0');
+    },
+
+    getConfig: function() {
+        var brocfileConfig = {};
+        return defaults(
+            this.project.config(process.env.EMBER_ENV).liveScriptOptions || {},
+            brocfileConfig,
+            {}
+        );
+    },
+
+    setupPreprocessorRegistry: function(type, registry) {
+        var plugin = new LiveScriptPreprocessor(this.getConfig());
+        registry.add('js', plugin);
+    },
+
+    included: function(app) {
+        this.app = app;
+        if (this.shouldSetupRegistryInIncluded()) {
+            this.setupPreprocessorRegistry('parent', app.registry);
+        }
+    }
 };
-
-LiveScriptAddon.prototype.included = function(app) {
-    this.app = app;
-    var plugin = new LiveScriptPreprocessor(this.app.options.liveScriptOptions);
-    this.app.registry.add('js', plugin);
-};
-
-// This is just here because it was required in ember-cli v0.0.37.
-// To be removed when compatibility breaks.
-LiveScriptAddon.prototype.treeFor = function() {};
-
-module.exports = LiveScriptAddon;
