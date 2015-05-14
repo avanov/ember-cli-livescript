@@ -1,7 +1,7 @@
 var Filter     = require('broccoli-filter');
 var checker    = require('ember-cli-version-checker');
 var defaults   = require('lodash').defaults;
-var liveScript = require('LiveScript');
+var liveScript = require('livescript');
 
 var LiveScriptFilter = function(inputTree, options) {
     if (!(this instanceof LiveScriptFilter))
