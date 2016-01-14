@@ -3,23 +3,40 @@ var checker    = require('ember-cli-version-checker');
 var defaults   = require('lodash').defaults;
 var liveScript = require('livescript');
 
-var LiveScriptFilter = function(inputTree, options) {
-    if (!(this instanceof LiveScriptFilter))
-        return new LiveScriptFilter(inputTree, options);
 
-    Filter.call(this, inputTree, options);
+LiveScript.prototype = Object.create(Filter.prototype);
 
+/**
+   * Abstract base-class for filtering purposes.
+   *
+   * Enforces that it is invoked on an instance of a class which prototypically
+   * inherits from Filter, and which is not itself Filter.
+   */
+LiveScript.prototype.constructor = LiveScript;
+function LiveScript(inputNode, options) {
+    Filter.call(this, inputNode, options);
     options = options || {bare: true};
     this.bare = options.bare;
-};
-LiveScriptFilter.prototype = Object.create(Filter.prototype);
-LiveScriptFilter.prototype.constructor = LiveScriptFilter;
-LiveScriptFilter.prototype.extensions = ['ls'];
-LiveScriptFilter.prototype.targetExtension = 'js';
-LiveScriptFilter.prototype.processString = function(string) {
-    var liveScriptOptions = { bare: this.bare };
+}
+
+// An array of file extensions to process
+LiveScript.prototype.extensions = ['ls'];
+
+// The file extension of the corresponding output files
+LiveScript.prototype.targetExtension = 'js';
+
+/**
+   * Abstract method `processString`: must be implemented on subclasses of
+   * Filter.
+   *
+   * The return value is written as the contents of the output file
+   */
+LiveScript.prototype.processString = function(content, relativePath) {
+    var liveScriptOptions = {
+        bare: this.bare
+    };
     try {
-        return liveScript.compile(string, liveScriptOptions);
+        return liveScript.compile(content, liveScriptOptions);
     } catch (err) {
         err.line = err.location && err.location.first_line;
         err.column = err.location && err.location.first_column;
@@ -28,20 +45,19 @@ LiveScriptFilter.prototype.processString = function(string) {
 };
 
 
+
 var LiveScriptPreprocessor = function(options) {
     this.name = 'ember-cli-livescript';
-    this.ext = 'js';
+    this.ext = 'ls';
     this.options = options || {bare: true};
 };
 
 
 LiveScriptPreprocessor.prototype.toTree = function(tree, inputPath, outputPath) {
     var options = {
-        bare: true,
-        srcDir: inputPath,
-        destDir: outputPath
+        bare: true
     };
-    return LiveScriptFilter(tree, options);
+    return new LiveScript(tree, options);
 };
 
 module.exports = {
